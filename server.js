@@ -1,10 +1,13 @@
-const app = require('express')();
+const express = require('express');
 const url = require('url');
+
+const app = express();
 // 루트에 대한 get 요청에 응답
+app.use(express.static('public'));
 app.get('/', (req, res) => {
   console.log('get:client.html');
   // 최초 루트 get 요청에 대해, 서버에 존재하는 chatClient.html 파일 전송
-  res.sendFile('client.html', { root: __dirname });
+  res.sendFile('index.html', { root: __dirname });
 });
 
 // 기타 웹 리소스 요청에 응답
@@ -34,12 +37,13 @@ const socket = require('socket.io').listen(server);
 // 소켓 Connection 이벤트 함수
 socket.sockets.on('connection', function(client) {
   // 클라이언트 고유값 생성
-  const clientID = uniqueID();
+  const clientID = `user${uniqueID()}`;
   console.log(`Connection: ${clientID}`);
-
+  socket.sockets.emit('changeUsername', clientID);
   // 서버 receive 이벤트 함수(클라이언트에서 호출 할 이벤트)
-  client.on('serverReceiver', value => {
+  client.on('serverReceiver', (username, message) => {
+    const msg = `${username} : ${message}`;
     // 클라이언트 이베트 호출
-    socket.sockets.emit('clientReceiver', { clientID, message: value });
+    socket.sockets.emit('receiveMessage', msg);
   });
 });

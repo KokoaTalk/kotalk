@@ -16,13 +16,13 @@ chatForm.addEventListener('submit', e => {
   const message = chatTextarea.value;
   chatTextarea.value = '';
   chatTextarea.focus();
-  socket.emit('send message', username, message);
+  socket.emit('serverReceiver', username, message);
 });
-socket.on('receive message', msg => {
+socket.on('receiveMessage', msg => {
   const item = document.createElement('li.chat__message');
   item.innerText = `${msg}\n`;
   chatMessages.appendChild(item);
 });
-socket.on('change name', name => {
+socket.on('changeUsername', name => {
   chatUsername.innerText = name;
 });

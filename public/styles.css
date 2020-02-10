@@ -17,11 +17,11 @@ body {
 .chat__chat-list {
   width: 100%;
   height: 406px;
+  overflow: auto;
 }
 .chat__messages {
   list-style-type: none;
   padding: 0 10px;
-  overflow: auto;
 }
 
 .chat__chat-input {
