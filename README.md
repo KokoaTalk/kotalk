@@ -1,2 +1,0 @@
-# kotalk
-for chat
