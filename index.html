@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="chat">
+      <div class="chat__chat-list">
+        <ul class="chat__messages">
+          <!--
+          <li class="chat__message message">
+            <span class="message__username">degurii</span>
+            :
+            <span class="message__text">hello!!!</span>
+          </li>
+          -->
+        </ul>
+      </div>
+      <div class="chat__chat-input">
+        <form class="chat__chat-form">
+          <input type="text" class="chat-input__username" readonly />
+          <input type="text" class="chat-input__textarea" />
+          <button class="chat-input__btn">전송</button>
+        </form>
+      </div>
+    </main>
+    <!--
+    <script src="/public/index.js"></script>
+    -->
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const chatForm = document.querySelector('.chat__chat-form');
+      const chatTextarea = document.querySelector('.chat-input__textarea');
+      const chatMessages = document.querySelector('.chat__messages');
+
+      chatForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const username = e.currentTarget.querySelector('.chat-input__username')
+          .value;
+        const message = chatTextarea.value;
+        chatTextarea.value = '';
+        chatTextarea.focus();
+        socket.emit('serverReceiver', username, message);
+      });
+      socket.on('receiveMessage', msg => {
+        const item = document.createElement('li.chat__message');
+        item.innerText = `${msg}\n`;
+        chatMessages.appendChild(item);
+      });
+      socket.on('changeUsername', name => {
+        const chatUsername = document.querySelector('.chat-input__username');
+        if (chatUsername.value === '') {
+          chatUsername.value = name;
+        }
+      });
+    </script>
+  </body>
+</html>
